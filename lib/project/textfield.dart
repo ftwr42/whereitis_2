@@ -10,7 +10,7 @@ class ProjectTextFieldWidget {
             Expanded(
               child: Container(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(25.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -28,12 +28,19 @@ class ProjectTextFieldWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  width: 300,
+                  width: 320,
                   child: editMode
                       ? TextField(
                           controller: controller,
+                          style: ProjectTextStyle.normal2(),
                         )
-                      : Text(controller.text),
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: 15, top: 18),
+                          child: Text(
+                            controller.text,
+                            style: ProjectTextStyle.normal2(),
+                          ),
+                        ),
                 ),
               ),
             ),

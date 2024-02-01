@@ -39,17 +39,15 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
           ProjectTextFieldWidget.inputField1('Location', cLocation, editable),
           ProjectTextFieldWidget.inputField1('Id', cId, editable),
           ProjectTextFieldWidget.inputField1('Auth', cAuth, editable),
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      _toggleEditable();
-                    },
-                    child: Text("EDIT")),
-                (editable) ? ElevatedButton(onPressed: () {}, child: Text("SAVE")) : Text(""),
-              ],
+          Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                  onPressed: () {
+                    _toggleEditable();
+                  },
+                  child: Text((editable ? "SAVE" : "EDIT"))),
             ),
           ),
         ],
