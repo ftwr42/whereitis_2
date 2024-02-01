@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:whereitis_2/model/model_element.dart';
+import 'package:whereitis_2/project/textstyle.dart';
+import 'package:whereitis_2/view/pages/page_property.dart';
 
 class ElementGridView extends StatelessWidget {
   late Rx<ElementModel> rxmodel;
@@ -13,18 +14,23 @@ class ElementGridView extends StatelessWidget {
     // print("description " + model.description);
 
     return Container(
-      width: 200,
-      height: 200,
-      color: Colors.red,
-      child: Stack(
-        children: [
-          Align(alignment: Alignment.topRight, child: dw(child: Text(model.title))),
-          Align(alignment: Alignment.bottomRight, child: dw(child: Text(model.description))),
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset("assets/images/cubboard_default_1.jpg"),
-          ),
-        ],
+      child: GestureDetector(
+        onTap: () {
+          //open new explorer with new model controller
+        },
+        onLongPress: () {
+          Get.to(() => ElementPropertyPage(model: rxmodel));
+        },
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Image.asset("assets/images/cubboard_default_1.jpg"),
+            ),
+            buildText(model.title, ProjectTextStyle.normal1(), Alignment.topRight),
+            buildText(model.description, ProjectTextStyle.normal2(), Alignment.bottomRight),
+          ],
+        ),
       ),
     );
     // return Container(
@@ -42,11 +48,19 @@ class ElementGridView extends StatelessWidget {
     //   ),
     // );
   }
-}
 
-Widget dw({required Text child}) => Padding(
-      padding: EdgeInsets.all(8),
-      child: Container(
-        child: child,
+  Align buildText(String text, TextStyle style, AlignmentGeometry align) {
+    return Align(
+      alignment: align,
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Container(
+          child: Text(
+            text,
+            style: style,
+          ),
+        ),
       ),
     );
+  }
+}

@@ -9,8 +9,15 @@ class ProjectTextStyle {
       );
 
   static TextStyle normal1() => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        letterSpacing: 1.0,
+      );
+
+  static TextStyle normal2() => const TextStyle(
         fontSize: 14,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.bold,
         color: Colors.black,
         letterSpacing: 1.0,
       );
