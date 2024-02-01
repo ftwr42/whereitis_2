@@ -5,7 +5,8 @@ import 'package:whereitis_2/view/view_element_property.dart';
 
 class ElementPropertyPage extends StatelessWidget {
   late Rx<ElementModel> model;
-  ElementPropertyPage({super.key, required this.model});
+  late bool editable;
+  ElementPropertyPage({super.key, required this.model, this.editable = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class ElementPropertyPage extends StatelessWidget {
       // floatingActionButton: WiiFab(),
       body: ElementPropertyView(
         model: model,
+        editable: editable,
       ),
     );
   }

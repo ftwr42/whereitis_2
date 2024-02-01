@@ -15,7 +15,9 @@ class HomePage extends GetView<ExplorerController> {
       appBar: AppBar(),
       drawer: WiiDrawerView(),
       floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: WiiFab(),
+      floatingActionButton: WiiFab(
+        controller: controller,
+      ),
       body: ExplorerView(controller: controller),
     );
   }

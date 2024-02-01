@@ -5,7 +5,7 @@ class ElementModel {
   late String description;
   late String location;
   late String id;
-  late File image;
+  late File _image;
   late String auth;
   // late Map<String, bool> auth = {
   //   'd': false,
@@ -27,6 +27,6 @@ class ElementModel {
       required this.id,
       required this.auth,
       required String imagePath}) {
-    image = File("assets/cubboard_default_1.jpg");
+    _image = File("assets/cubboard_default_1.jpg");
   }
 }

@@ -5,18 +5,17 @@ import 'package:whereitis_2/project/textfield.dart';
 
 class ElementPropertyView extends StatefulWidget {
   late Rx<ElementModel> model;
-  ElementPropertyView({required this.model});
+  late bool editable;
+  ElementPropertyView({required this.model, this.editable = false});
 
   @override
   State<ElementPropertyView> createState() => _ElementPropertyViewState();
 }
 
 class _ElementPropertyViewState extends State<ElementPropertyView> {
-  bool editable = false;
-
   void _toggleEditable() {
     setState(() {
-      editable = !editable;
+      widget.editable = !widget.editable;
     });
   }
 
@@ -35,10 +34,10 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     return Container(
       child: Column(
         children: [
-          ProjectTextFieldWidget.inputField1('Description', cDescription, editable),
-          ProjectTextFieldWidget.inputField1('Location', cLocation, editable),
-          ProjectTextFieldWidget.inputField1('Id', cId, editable),
-          ProjectTextFieldWidget.inputField1('Auth', cAuth, editable),
+          ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
+          ProjectTextFieldWidget.inputField1('Location', cLocation, widget.editable),
+          ProjectTextFieldWidget.inputField1('Id', cId, widget.editable),
+          ProjectTextFieldWidget.inputField1('Auth', cAuth, widget.editable),
           Padding(
             padding: const EdgeInsets.only(top: 50),
             child: Align(
@@ -47,7 +46,7 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
                   onPressed: () {
                     _toggleEditable();
                   },
-                  child: Text((editable ? "SAVE" : "EDIT"))),
+                  child: Text((widget.editable ? "SAVE" : "EDIT"))),
             ),
           ),
         ],
