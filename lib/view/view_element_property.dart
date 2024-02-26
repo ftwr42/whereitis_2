@@ -33,27 +33,35 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     cId.text = widget.model.value.id;
     cAuth.text = widget.model.value.auth.toString();
 
-    return Container(
-      child: Column(
-        children: [
-          ProjectTextFieldWidget.inputField1('Title', cTitle, widget.editable),
-          ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
-          ProjectTextFieldWidget.inputField1('Location', cLocation, widget.editable),
-          ProjectTextFieldWidget.inputField1('Id', cId, widget.editable),
-          ProjectTextFieldWidget.inputField1('Auth', cAuth, widget.editable),
-          Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: Align(
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProjectTextFieldWidget.inputField1('Title', cTitle, widget.editable),
+            SizedBox(height: 16.0),
+            ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
+            SizedBox(height: 16.0),
+            ProjectTextFieldWidget.inputField1('Location', cLocation, widget.editable),
+            SizedBox(height: 16.0),
+            ProjectTextFieldWidget.inputField1('Id', cId, widget.editable),
+            SizedBox(height: 16.0),
+            ProjectTextFieldWidget.inputField1('Auth', cAuth, widget.editable),
+            SizedBox(height: 16.0),
+            Align(
               alignment: Alignment.center,
               child: ElevatedButton(
-                  onPressed: () {
-                    _toggleEditable();
-                  },
-                  child: Text((widget.editable ? "SAVE" : "EDIT"))),
+                onPressed: () {
+                  _toggleEditable();
+                },
+                child: Text((widget.editable ? "SAVE" : "EDIT")),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 }
