@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/controller/controller_explorer.dart';
-
-import 'view/pages/home_page.dart';
+import 'package:whereitis_2/singleton.dart';
+import 'package:whereitis_2/view/page_explorer.dart';
 
 void main() {
   Get.put(ExplorerController());
@@ -20,7 +20,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: Obx(
+        () {
+          Singleton().rxActiveStore!.value.id; // for obx scan
+          return ExplorerView(
+            controller: ExplorerController(),
+            dirModel: Singleton().rxActiveStore!,
+          );
+        },
+      ),
     );
   }
 }

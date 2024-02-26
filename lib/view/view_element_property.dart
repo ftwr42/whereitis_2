@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:whereitis_2/model/model_element.dart';
+import 'package:whereitis_2/model/model_file.dart';
 import 'package:whereitis_2/project/textfield.dart';
 
 class ElementPropertyView extends StatefulWidget {
-  late Rx<ElementModel> model;
+  late Rx<FileModel> model;
   late bool editable;
   ElementPropertyView({required this.model, this.editable = false});
 

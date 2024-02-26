@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/controller/controller_explorer.dart';
-import 'package:whereitis_2/model/model_element.dart';
-import 'package:whereitis_2/view/pages/page_property.dart';
+import 'package:whereitis_2/model/model_file.dart';
+import 'package:whereitis_2/view/pages/page_touch_file.dart';
 
 //https://pub.dev/packages/flutter_expandable_fab
 class WiiFab extends StatelessWidget {
@@ -25,15 +25,16 @@ class WiiFab extends StatelessWidget {
           child: const Icon(Icons.edit),
           onPressed: () {
             _key.currentState!.toggle();
-            var newrxmodel = ElementModel(
+            var newrxmodel = FileModel(
                     title: 'Title',
                     description: 'Description',
                     location: 'Location',
                     id: 'Id',
                     auth: 'frwxrwxrwx',
+                    imgPath: "",
                     imagePath: 'assets/element_placeholder.jpg')
                 .obs;
-            Get.to(ElementPropertyPage(
+            Get.to(TouchFilePage(
               model: newrxmodel,
               editable: true,
             ));
@@ -44,15 +45,16 @@ class WiiFab extends StatelessWidget {
           child: const Icon(Icons.create_new_folder_outlined),
           onPressed: () {
             _key.currentState!.toggle();
-            var newrxmodel = ElementModel(
+            var newrxmodel = FileModel(
                     title: 'Title',
                     description: 'Description',
                     location: 'Location',
                     id: 'Id',
                     auth: 'drwxrwxrwx',
+                    imgPath: "",
                     imagePath: 'assets/element_placeholder.jpg')
                 .obs;
-            Get.to(ElementPropertyPage(
+            Get.to(TouchFilePage(
               model: newrxmodel,
               editable: true,
             ));

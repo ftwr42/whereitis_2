@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/model/model_element.dart';
+import 'package:whereitis_2/model/model_file.dart';
 import 'package:whereitis_2/project/textstyle.dart';
-import 'package:whereitis_2/view/pages/page_property.dart';
+import 'package:whereitis_2/view/pages/page_touch_file.dart';
 
 class ElementGridView extends StatelessWidget {
-  late Rx<ElementModel> rxmodel;
+  late Rx<FileModel> rxmodel;
   ElementGridView({required this.rxmodel});
 
   @override
@@ -19,7 +19,7 @@ class ElementGridView extends StatelessWidget {
           //open new explorer with new model controller
         },
         onLongPress: () {
-          Get.to(() => ElementPropertyPage(model: rxmodel));
+          Get.to(() => TouchFilePage(model: rxmodel));
         },
         child: Stack(
           children: [

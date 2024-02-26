@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/model/model_element.dart';
+import 'package:whereitis_2/model/model_file.dart';
 
 class ElementView extends StatelessWidget {
-  late Rx<ElementModel> model;
-  ElementView(Rx<ElementModel> model);
+  late Rx<FileModel> model;
+  ElementView(Rx<FileModel> model);
 
   @override
   Widget build(BuildContext context) {
