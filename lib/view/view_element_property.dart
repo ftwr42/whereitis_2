@@ -25,7 +25,9 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     var cLocation = TextEditingController();
     var cId = TextEditingController();
     var cAuth = TextEditingController();
+    var cTitle = TextEditingController();
 
+    cTitle.text = widget.model.value.title;
     cDescription.text = widget.model.value.description;
     cLocation.text = widget.model.value.location;
     cId.text = widget.model.value.id;
@@ -34,6 +36,7 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     return Container(
       child: Column(
         children: [
+          ProjectTextFieldWidget.inputField1('Title', cTitle, widget.editable),
           ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
           ProjectTextFieldWidget.inputField1('Location', cLocation, widget.editable),
           ProjectTextFieldWidget.inputField1('Id', cId, widget.editable),

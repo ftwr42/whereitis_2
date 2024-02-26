@@ -11,7 +11,9 @@ import 'package:whereitis_2/view/view_element_grid.dart';
 class ExplorerView extends StatelessWidget {
   late ExplorerController controller;
   late Rx<FileModel> dirModel;
-  ExplorerView({super.key, required this.controller, required this.dirModel});
+  late bool withDrawer;
+  ExplorerView(
+      {super.key, required this.controller, required this.dirModel, this.withDrawer = true});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,12 @@ class ExplorerView extends StatelessWidget {
       floatingActionButton: WiiFab(
         controller: controller,
       ),
-      drawer: WiiDrawerView(
-        rxFileModel: Singleton().rxRootFile,
-        rxProfileModel: Singleton().rxRootProfile,
-      ),
+      drawer: (withDrawer)
+          ? WiiDrawerView(
+              rxFileModel: Singleton().rxRootFile,
+              rxProfileModel: Singleton().rxRootProfile,
+            )
+          : null,
       body: Container(
         child: CustomScrollView(
           slivers: [

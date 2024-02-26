@@ -90,7 +90,37 @@ class Singleton {
       description: "Kleiner Schwarzer Hund",
       location: "In da Box",
       id: "hundid",
-      auth: "-rwxrwxrwx",
+      auth: "drwxrwxrwx",
+      imgPath: '',
+      imagePath: "",
+    ).obs;
+
+    var chickenAA = FileModel(
+      title: "Chicken AA",
+      description: "Kleiner Schwarzer Hund",
+      location: "In da Box",
+      id: "hundid",
+      auth: "drwxrwxrwx",
+      imgPath: '',
+      imagePath: "",
+    ).obs;
+
+    var chickenAB = FileModel(
+      title: "Chicken AB",
+      description: "Kleiner Schwarzer Hund",
+      location: "In da Box",
+      id: "hundid",
+      auth: "drwxrwxrwx",
+      imgPath: '',
+      imagePath: "",
+    ).obs;
+
+    var chickenAC = FileModel(
+      title: "Chicken AC",
+      description: "Kleiner Schwarzer Hund",
+      location: "In da Box",
+      id: "hundid",
+      auth: "drwxrwxrwx",
       imgPath: '',
       imagePath: "",
     ).obs;
@@ -115,6 +145,16 @@ class Singleton {
       imagePath: "",
     ).obs;
 
+    var chickenD = FileModel(
+      title: "Chicken D",
+      description: "Kleiner Schwarzer Hund",
+      location: "In da Box",
+      id: "klfnsdklof",
+      auth: "-rwxrwxrwx",
+      imgPath: '',
+      imagePath: "",
+    ).obs;
+
     rxRootProfile = profileModel;
 
     rxRootFile = root;
@@ -122,8 +162,12 @@ class Singleton {
     rxRootFile.value.files?.add(storeB);
 
     storeA.value.files?.add(chickenA);
+    chickenA.value.files?.add(chickenAA);
+    chickenA.value.files?.add(chickenAB);
+    chickenA.value.files?.add(chickenAC);
     storeA.value.files?.add(chickenB);
     storeA.value.files?.add(chickenC);
+    storeA.value.files?.add(chickenD);
 
     storeB.value.files?.add(hundA);
     storeB.value.files?.add(hundB);

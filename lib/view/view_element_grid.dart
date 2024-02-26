@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whereitis_2/controller/controller_explorer.dart';
 import 'package:whereitis_2/model/model_file.dart';
 import 'package:whereitis_2/project/textstyle.dart';
+import 'package:whereitis_2/view/page_explorer.dart';
 import 'package:whereitis_2/view/pages/page_touch_file.dart';
 
 class ElementGridView extends StatelessWidget {
@@ -17,6 +19,15 @@ class ElementGridView extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           //open new explorer with new model controller
+          if (rxmodel.value.isDir()) {
+            Get.to(ExplorerView(
+              controller: ExplorerController(),
+              dirModel: rxmodel,
+              withDrawer: false,
+            ));
+          } else {
+            Get.to(() => TouchFilePage(model: rxmodel));
+          }
         },
         onLongPress: () {
           Get.to(() => TouchFilePage(model: rxmodel));

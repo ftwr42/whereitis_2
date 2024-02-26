@@ -49,6 +49,7 @@ class DrawerStoresView extends StatelessWidget {
 
   Widget storeView(Rx<FileModel> rxModel) => GestureDetector(
         onTap: () {
+          //todo understand routetree from  Get and then close all pages opened after the root of a store
           Singleton().rxActiveStore = rxModel;
           Singleton().rxActiveStore!.refresh();
         },
