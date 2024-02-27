@@ -30,6 +30,29 @@ class FileModel {
     }
   }
 
+  FileModel.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    description = json['description'];
+    location = json['location'];
+    id = json['id'];
+    auth = json['auth'];
+    imgPath = json['imgPath'];
+
+    _image = File("assets/cubboard_default_1.jpg");
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {
+      'title': title,
+      'description': description,
+      'location': location,
+      'id': id,
+      'auth': auth,
+      'imgPath': imgPath
+    };
+    return json;
+  }
+
   bool isDir() {
     return (auth[0] == 'd') ? true : false;
   }

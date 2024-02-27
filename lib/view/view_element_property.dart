@@ -39,16 +39,11 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProjectTextFieldWidget.inputField1('Title', cTitle, widget.editable),
-            SizedBox(height: 16.0),
-            ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
-            SizedBox(height: 16.0),
-            ProjectTextFieldWidget.inputField1('Location', cLocation, widget.editable),
-            SizedBox(height: 16.0),
-            ProjectTextFieldWidget.inputField1('Id', cId, widget.editable),
-            SizedBox(height: 16.0),
-            ProjectTextFieldWidget.inputField1('Auth', cAuth, widget.editable),
-            SizedBox(height: 16.0),
+            wrapper('Title', cTitle),
+            wrapper('Description', cDescription),
+            wrapper('Location', cLocation),
+            wrapper('Id', cId),
+            wrapper('Auth', cAuth),
             Align(
               alignment: Alignment.center,
               child: ElevatedButton(
@@ -64,4 +59,10 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     );
   }
 
+  Padding wrapper(String title, TextEditingController cTitle) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 16.0),
+      child: ProjectTextFieldWidget.inputField1(title, cTitle, widget.editable),
+    );
+  }
 }
