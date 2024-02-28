@@ -21,4 +21,16 @@ class ProjectTextStyle {
         color: Colors.black,
         letterSpacing: 1.0,
       );
+  static TextStyle title() => const TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    letterSpacing: 1.0,
+  );
+
+  static TextStyle description() => const TextStyle(
+    fontSize: 12,
+    color: Colors.white,
+    letterSpacing: 1.0,
+  );
 }
