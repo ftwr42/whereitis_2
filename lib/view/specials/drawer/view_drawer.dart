@@ -13,28 +13,36 @@ class WiiDrawerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return SizedBox(
       width: 300,
-      child: Column(
-        children: [
-          DrawerProfileView(rxModel: rxProfileModel),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home"),
-          ),
-          ListTile(
-            leading: Icon(Icons.history),
-            title: Text("My History"),
-          ),
-          Divider(),
-          DrawerStoresView(rxmodel: rxFileModel),
-          Expanded(child: Container()),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: const DrawerSettingsView(),
-          ),
-        ],
+      child: Drawer(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView( // Wrap with ListView
+                children: [
+                  DrawerProfileView(rxModel: rxProfileModel),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text("Home"),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.history),
+                    title: Text("My History"),
+                  ),
+                  Divider(),
+                  DrawerStoresView(rxmodel: rxFileModel),
+                  Expanded(child: Container()),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const DrawerSettingsView(),
+            ),
+          ],
+        ),
       ),
     );
   }

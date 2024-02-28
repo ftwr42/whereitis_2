@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ProjectTextStyle {
   static TextStyle header1() => const TextStyle(
-        fontSize: 24,
+        fontSize: 14,
         fontWeight: FontWeight.bold,
         color: Colors.blue,
         letterSpacing: 2.0,

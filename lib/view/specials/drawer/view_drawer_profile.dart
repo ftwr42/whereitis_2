@@ -7,7 +7,7 @@ class DrawerProfileView extends StatelessWidget {
   late Rx<ProfileModel> rxModel;
   DrawerProfileView({super.key, required this.rxModel});
 
-  final double height = 200;
+  final double height = 250;
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +24,22 @@ class DrawerProfileView extends StatelessWidget {
 
   Widget credentials() => Container(
         height: height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              '${rxModel.value.firstName} ${rxModel.value.lastName}',
-              style: ProjectTextStyle.header1(),
-            ),
-            Text(
-              '${rxModel.value.email}',
-              style: ProjectTextStyle.header1(),
-            ),
-          ],
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${rxModel.value.firstName} ${rxModel.value.lastName}',
+                style: ProjectTextStyle.header1(),
+              ),
+              Text(
+                '${rxModel.value.email}',
+                style: ProjectTextStyle.header1(),
+              ),
+            ],
+          ),
         ),
       );
 
