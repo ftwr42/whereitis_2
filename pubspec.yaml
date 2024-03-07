@@ -13,12 +13,17 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   flutter_expandable_fab: ^2.0.0
+  hive: ^2.2.3
+  hive_flutter:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  json_serializable: ^6.7.1
+  hive_generator:
+  build_runner:
 
 flutter:
   uses-material-design: true

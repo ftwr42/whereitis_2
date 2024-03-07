@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/model_file.dart';
 import 'package:whereitis_2/model/model_profile.dart';
 
@@ -10,6 +11,7 @@ class Singleton {
 
   late Rx<FileModel> rxRootFile;
   late Rx<ProfileModel> rxRootProfile;
+  late Rx<List<ProfileModel>> rxProfiles;
 
   Rx<FileModel>? rxActiveStore;
 
@@ -18,6 +20,8 @@ class Singleton {
   }
 
   Singleton._internal() {
+    var rxProfiles = DBTool.loadProfilesFromFS().obs;
+
     var profileModel = ProfileModel(
             firstName: "Jan",
             lastName: "Freirich",

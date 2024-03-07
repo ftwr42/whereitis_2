@@ -6,6 +6,7 @@ import 'package:whereitis_2/view/page_explorer.dart';
 
 void main() {
   Get.put(ExplorerController());
+  Singleton();
   runApp(const MyApp());
 }
 
