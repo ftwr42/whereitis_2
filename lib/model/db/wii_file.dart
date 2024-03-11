@@ -1,3 +1,6 @@
+import 'dart:core';
+
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,6 +30,7 @@ class WFile {
   @HiveField(13)
   @JsonKey(name: "files")
   List<dynamic> files;
+  List<Rx<WFile>> filesObj = [];
 
   WFile({
     required this.title,

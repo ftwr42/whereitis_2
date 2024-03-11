@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/controller/controller_explorer.dart';
-import 'package:whereitis_2/model/model_file.dart';
+import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/project/textstyle.dart';
 import 'package:whereitis_2/view/page_explorer.dart';
 import 'package:whereitis_2/view/pages/page_touch_file.dart';
 
 class ElementGridView extends StatelessWidget {
-  late Rx<FileModel> rxmodel;
+  late Rx<WFile> rxmodel;
   ElementGridView({required this.rxmodel});
 
   @override
@@ -18,10 +18,10 @@ class ElementGridView extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // Open new explorer with new model controller
-          if (rxmodel.value.isDir()) {
+          if (rxmodel.value.auth.startsWith('d')) {
             Get.to(ExplorerView(
               controller: ExplorerController(),
-              dirModel: rxmodel,
+              wFile: rxmodel,
               withDrawer: false,
             ));
           } else {

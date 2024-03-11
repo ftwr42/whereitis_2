@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/model/model_file.dart';
+import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/view/view_element_property.dart';
 
 class TouchFilePage extends StatelessWidget {
-  late Rx<FileModel> model;
+  late Rx<WFile> model;
   late bool editable;
   TouchFilePage({super.key, required this.model, this.editable = false});
 

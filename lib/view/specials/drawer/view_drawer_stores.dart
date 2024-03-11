@@ -1,36 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/model/model_file.dart';
+import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/singleton.dart';
 import 'package:whereitis_2/view/pages/page_touch_file.dart';
 
-class DrawerStoresView extends StatelessWidget {
-  late Rx<FileModel> rxmodel;
-  DrawerStoresView({super.key, required this.rxmodel});
+import '../../../model/DBTool.dart';
 
-  FileModel storePlaceholderModel = FileModel(
-      title: 'New Store',
-      description: 'enter a description',
-      location: 'xy',
-      id: 'none',
-      auth: 'drwxrwxrwx',
-      imgPath: "",
-      imagePath: 'assets/images/store_placeholder.png');
+class DrawerStoresView extends StatelessWidget {
+  DrawerStoresView({super.key});
+
+  WFile storePlaceholderModel = WFile(
+    title: 'New Store',
+    description: 'enter a description',
+    location: 'xy',
+    id: 'none',
+    auth: 'drwxrwxrwx',
+    image: 'assets/images/store_placeholder.png',
+    files: [],
+  );
 
   @override
   Widget build(BuildContext context) {
-    var files = rxmodel.value.files;
-
-    return Column(
-      children: [
-        Obx(
-          () => Column(
-            children: files!.map((e) => storeView(e)).toList() ?? storePlaceholder(),
-          ),
-        ),
-        createNewStoreButton(),
-      ],
-    );
+    return Column(children: [
+      FutureBuilder(
+        future: DBTool.instanceFiles(Singleton().rxRoot.value),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          var files = snapshot.data as List<Rx<WFile>>;
+          print("================>>>>" + files[0].value.title);
+          Column w;
+          if (snapshot.hasData) {
+            w = Column(
+              children: files.map((e) => storeView(e)).toList(),
+            );
+          } else {
+            w = const Column(
+              children: [
+                Text("Hallo test2"),
+              ],
+            );
+          }
+          return w;
+        },
+      ),
+      createNewStoreButton(),
+    ]);
   }
 
   List<Widget> storePlaceholder() {
@@ -47,16 +60,16 @@ class DrawerStoresView extends StatelessWidget {
     ];
   }
 
-  Widget storeView(Rx<FileModel> rxModel) => GestureDetector(
+  Widget storeView(Rx<WFile> rxModel) => GestureDetector(
         onTap: () {
           //todo understand routetree from  Get and then close all pages opened after the root of a store
-          Singleton().rxActiveStore = rxModel;
-          Singleton().rxActiveStore!.refresh();
+          // Singleton().rxActiveStore = rxModel;
+          // Singleton().rxActiveStore!.refresh();
         },
         child: Container(
-          color: (rxModel.value.id == Singleton().rxActiveStore!.value.id)
-              ? Colors.lightBlueAccent
-              : null,
+          // color: (rxModel.value.id == Singleton().rxActiveStore!.value.id)
+          //     ? Colors.lightBlueAccent
+          //     : null,
           child: ListTile(
             leading: const Icon(Icons.store),
             title: Text(rxModel.value.title),
