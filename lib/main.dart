@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/controller/controller_explorer.dart';
 import 'package:whereitis_2/model/DBTool.dart';
-import 'package:whereitis_2/model/db/wii_file.dart';
-import 'package:whereitis_2/singleton.dart';
-import 'package:whereitis_2/view/page_explorer.dart';
 
-void main() {
+Future<void> main() async {
   Get.put(ExplorerController());
-  runApp(const MyApp());
+  // DBTool.clearAll();
+  //DBTool.putDefaults();
+  DBTool.printAllFiles();
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,33 +17,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DBTool.loadRootFromFs(),
+      future: DBTool.loadProfileAndRootSafeToSingletonAndReturnRoot(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        var data = snapshot.data as Rx<WFile>;
-
-        Widget w;
+        Widget w = Container();
         if (snapshot.hasData) {
-          w = GetMaterialApp(
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            home: Obx(
-              () {
-                Singleton().rxRoot.value.id;
-                return ExplorerView(
-                  controller: ExplorerController(),
-                  wFile: Singleton().rxRoot.value.filesObj[0],
-                );
-              },
-            ),
-          );
+          // w = GetMaterialApp(
+          //   title: 'Wii - Where is it',
+          //   theme: ThemeData(
+          //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          //     useMaterial3: true,
+          //   ),
+          // home: Obx(
+          //   () {
+          //     return ExplorerView(
+          //       wFile: snapshot.data.value.filesObj[0],
+          //     );
+          //   },
+          // ),
+          // );
         } else {
-          w = Container(
-            child: const Center(
-              child: Text("NO DATA FOUND"),
-            ),
+          w = const Center(
+            child: Text("NO DATA FOUND"),
           );
         }
         return w;

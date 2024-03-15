@@ -1,62 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/controller/controller_explorer.dart';
+import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/singleton.dart';
 import 'package:whereitis_2/view/specials/drawer/view_drawer.dart';
 import 'package:whereitis_2/view/specials/fab/view_fab.dart';
-import 'package:whereitis_2/view/view_element_grid.dart';
 
-import '../model/DBTool.dart';
-
-class ExplorerView extends StatelessWidget {
-  late ExplorerController controller;
+class ExplorerView extends StatefulWidget {
   late Rx<WFile> wFile;
   late bool withDrawer;
-  ExplorerView({super.key, required this.controller, required this.wFile, this.withDrawer = true}) {
-    Singleton().rxActive = wFile;
-  }
+  ExplorerView({super.key, required this.wFile, this.withDrawer = true});
 
   @override
+  State<ExplorerView> createState() => _ExplorerViewState();
+}
+
+class _ExplorerViewState extends State<ExplorerView> {
+  @override
   Widget build(BuildContext context) {
+    List files = widget.wFile.value.files;
+
+    widget.wFile.listen((p0) {
+      setState(() {});
+    });
+
     return Scaffold(
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: WiiFab(
-        controller: controller,
+        wFile: widget.wFile,
       ),
-      drawer: (withDrawer) ? WiiDrawerView() : null,
-      body: Container(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(wFile.value.title), //Text(dirModel.value.title),
-            ),
-            FutureBuilder(
-              future: DBTool.instanceFiles(wFile.value),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                var data = Singleton().rxActive.value.filesObj;
-                SliverGrid sliver;
-                if (snapshot.hasData) {
-                  sliver = SliverGrid(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      return ElementGridView(rxmodel: data[index]);
-                    }, childCount: data.length),
-                    gridDelegate: elementGridDelegate(2),
-                  );
-                } else {
-                  sliver = SliverGrid(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      return ElementGridView(rxmodel: data[index]);
-                    }, childCount: data.length),
-                    gridDelegate: elementGridDelegate(2),
-                  );
-                }
-                return sliver;
-              },
-            ),
-          ],
-        ),
+      drawer: (Singleton().rxRoot == null || Singleton().rxProfile == null)
+          ? WiiDrawerView(
+              rxFile: Singleton().rxRoot!,
+              rxProfile: Singleton().rxProfile!,
+            )
+          : null,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: Text(widget.wFile.value.title), //Text(dirModel.value.title),
+          ),
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+                (context, index) => FutureBuilder(
+                    future: DBTool.loadFileFromFS(files[index]),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      Widget w = const Text("HAS NO DATA");
+                      if (snapshot.hasData) {
+                        w = ExplorerView(wFile: snapshot.data);
+                      }
+                      return w;
+                    }),
+                childCount: files.length),
+            gridDelegate: elementGridDelegate(2),
+          ),
+        ],
       ),
     );
   }

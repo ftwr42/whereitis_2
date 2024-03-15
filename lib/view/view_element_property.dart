@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
+import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/project/textfield.dart';
 
 class ElementPropertyView extends StatefulWidget {
-  late Rx<WFile> model;
+  late Rx<WFile> wFile;
+  late Rx<WFile> parentFile;
   late bool editable;
-  ElementPropertyView({required this.model, this.editable = false});
+  ElementPropertyView(
+      {required this.wFile, this.editable = false, required this.parentFile, required String type});
 
   @override
   State<ElementPropertyView> createState() => _ElementPropertyViewState();
@@ -27,11 +30,11 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
     var cAuth = TextEditingController();
     var cTitle = TextEditingController();
 
-    cTitle.text = widget.model.value.title;
-    cDescription.text = widget.model.value.description;
-    cLocation.text = widget.model.value.location;
-    cId.text = widget.model.value.id;
-    cAuth.text = widget.model.value.auth.toString();
+    cTitle.text = widget.wFile.value.title;
+    cDescription.text = widget.wFile.value.description;
+    cLocation.text = widget.wFile.value.location;
+    cId.text = widget.wFile.value.id;
+    cAuth.text = widget.wFile.value.auth.toString();
 
     return SingleChildScrollView(
       child: Container(
@@ -53,9 +56,32 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
+                  if (widget.editable) {
+                    var model = widget.wFile.value;
+                    model.title = cTitle.text;
+                    model.auth = cAuth.text;
+                    model.location = cLocation.text;
+                    model.description = cDescription.text;
+                    model.id = cId.text;
+
+                    DBTool.putFile(widget.wFile.value, widget.parentFile);
+                  }
                   _toggleEditable();
                 },
                 child: Text((widget.editable ? "SAVE" : "EDIT")),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  // DBTool.dropFile(widget.wFile.value, widget.parentFile);
+                  Get.back();
+                },
+                child: const Text("DELETE"),
               ),
             ),
           ],

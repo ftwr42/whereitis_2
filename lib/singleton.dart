@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 
 import 'model/db/wii_file.dart';
@@ -12,20 +11,18 @@ class Singleton {
 
   static final Singleton _singleton = Singleton._internal();
 
-  late Rx<WFile> rxRoot;
-  late Rx<WProfile> rxProfile;
-  late Rx<WFile> rxActive;
+  Rx<WFile>? rxRoot;
+  Rx<WProfile>? rxProfile;
 
-  late BoxCollection collection;
+  int _hashCounter = 42;
+
+  int getHashCounter() {
+    return _hashCounter++;
+  }
 
   factory Singleton() {
     return _singleton;
   }
 
-  Singleton._internal() {
-    //DBTool.createDefaults();
-
-    rxRoot =
-        WFile(title: "", description: "", location: "", id: "", image: "", files: [], auth: '').obs;
-  }
+  Singleton._internal();
 }

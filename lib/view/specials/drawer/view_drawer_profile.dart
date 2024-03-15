@@ -6,21 +6,30 @@ import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 import 'package:whereitis_2/project/textstyle.dart';
 import 'package:whereitis_2/singleton.dart';
+import 'package:whereitis_2/view/pages/page_property_profile.dart';
 
 class DrawerProfileView extends StatelessWidget {
-  DrawerProfileView({super.key});
+  late Rx<WProfile> rxProfile;
+  DrawerProfileView({super.key, required this.rxProfile});
 
   final double height = 250;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      child: Stack(
-        children: [
-          Align(alignment: Alignment.center, child: profileImage()),
-          Align(alignment: Alignment.bottomRight, child: credentials()),
-        ],
+    return GestureDetector(
+      onLongPress: () {
+        Get.to(PropertyProfilePage(
+          rxProfile: rxProfile,
+        ));
+      },
+      child: Container(
+        height: height,
+        child: Stack(
+          children: [
+            Align(alignment: Alignment.center, child: profileImage()),
+            Align(alignment: Alignment.bottomRight, child: credentials()),
+          ],
+        ),
       ),
     );
   }
