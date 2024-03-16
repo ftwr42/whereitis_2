@@ -206,6 +206,27 @@ class DBTool {
     }
   }
 
+  static dropFile(WFile wFile, Rx<WFile> parent) async {
+    var openBox = await openHiveBox(FILENAME);
+
+    // var getFile = await loadFileFromFS(wFile.id);
+    var getFile = await openBox.get(wFile.id);
+
+    if (getFile != null) {
+      openBox.delete(wFile.id);
+
+      int i = 0;
+      for (String str in parent.value.files) {
+        if (str == wFile.id) {
+          parent.value.files.removeAt(i);
+        }
+        i++;
+      }
+
+      parent.refresh();
+    }
+  }
+
   static _addToLists(Box<dynamic> box, WFile wFile, Rx<WFile> parent) async {
     parent.value.files.add(wFile.id);
 

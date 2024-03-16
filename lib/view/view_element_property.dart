@@ -87,7 +87,7 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  // DBTool.dropFile(widget.wFile.value, widget.parentFile);
+                  DBTool.dropFile(widget.wFile.value, widget.parentFile);
                   Get.back();
                 },
                 child: const Text("DELETE"),
