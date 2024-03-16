@@ -5,15 +5,19 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:whereitis_2/model/db/settings.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 import 'package:whereitis_2/project/assets_images.dart';
 
 import '../singleton.dart';
 
+//flutter packages pub run build_runner build
+
 class DBTool {
   static const String DBNAME = "WIIDB";
   static const String PROFILENAME = "profiles";
+  static const String SETTINGSNAME = "settings";
   static const String FILENAME = "files";
   static const String PATH = "./where_it_is";
   static const String ROOTKEY = "root";
@@ -23,6 +27,8 @@ class DBTool {
     await fileBox.clear();
     var profileBox = await openHiveBox(PROFILENAME);
     await profileBox.clear();
+    var settingsBox = await openHiveBox(SETTINGSNAME);
+    await settingsBox.clear();
   }
 
   static putDefaults() async {
@@ -137,6 +143,9 @@ class DBTool {
     var wpstring = wpjsonEncode2.toString();
     Singleton().rxProfile = wProfile.obs;
     var name = await (await openHiveBox(PROFILENAME)).put('root', wpstring);
+
+    var wSettings = WSettings(activeStore: storeA.id);
+    putSettings(wSettings);
   }
 
   static putProfile(WProfile wProfile) async {
@@ -171,6 +180,20 @@ class DBTool {
     return wProfile;
   }
 
+  static Future<WSettings?> loadSettingsFromFS(String key) async {
+    var openBox = await openHiveBox(SETTINGSNAME);
+    var settings = await openBox.get('root');
+
+    if (settings == null) {
+      return null;
+    }
+
+    var decode = jsonDecode(settings);
+    WSettings wSettings = WSettings.fromJson(decode);
+
+    return wSettings;
+  }
+
   static Future<WFile?> loadFileFromFS(String key) async {
     var fileBox = await openHiveBox(FILENAME);
 
@@ -185,6 +208,21 @@ class DBTool {
     var wFile = WFile.fromJson(jsonDecode2);
 
     return wFile;
+  }
+
+  static putSettings(WSettings wSettings) async {
+    var openBox = await openHiveBox(SETTINGSNAME);
+
+    // var getFile = await loadFileFromFS(wFile.id);
+    // var getSettings = await openBox.get('root');
+
+    var json = wSettings.toJson();
+    var jsonEncode2 = jsonEncode(json);
+    var string = jsonEncode2.toString();
+
+    await openBox.put('root', string);
+    var s = await openBox.get('root');
+    print("SAVED: " + s.toString());
   }
 
   static putFile(WFile wFile, Rx<WFile> parent) async {

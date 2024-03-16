@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/model/DBTool.dart';
+import 'package:whereitis_2/model/db/settings.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
+import 'package:whereitis_2/singleton.dart';
 import 'package:whereitis_2/view/pages/page_property_file.dart';
 
-class DrawerStoresView extends StatelessWidget {
+class DrawerStoresView extends StatefulWidget {
   late Rx<WFile> wFile;
+  late Rx<WSettings> rxSettings;
 
-  DrawerStoresView({super.key, required this.wFile});
+  DrawerStoresView({super.key, required this.wFile, required this.rxSettings});
 
+  @override
+  State<DrawerStoresView> createState() => _DrawerStoresViewState();
+}
+
+class _DrawerStoresViewState extends State<DrawerStoresView> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Column(
-          children: wFile.value.files.map((e) => storeView(e)).toList(),
+        Obx(
+          () => wrapper(Singleton().rxSettings!),
         ),
         createNewStoreButton(),
       ],
+    );
+  }
+
+  Widget wrapper(Rx<WSettings> settings) {
+    return Column(
+      children: widget.wFile.value.files.map((e) => storeView(e)).toList(),
     );
   }
 
@@ -31,13 +45,15 @@ class DrawerStoresView extends StatelessWidget {
             w = GestureDetector(
               onTap: () {
                 //todo understand routetree from  Get and then close all pages opened after the root of a store
-                // Singleton().rxActiveStore = rxModel;
-                // Singleton().rxActiveStore!.refresh();
+
+                var rxHandleStore = Singleton().rxHandleStores;
+                rxHandleStore?.value.activeStore = key;
+                rxHandleStore?.refresh();
               },
               child: Container(
-                // color: (rxModel.value.id == Singleton().rxActiveStore!.value.id)
-                //     ? Colors.lightBlueAccent
-                //     : null,
+                color: (key == Singleton().rxHandleStores?.value.activeStore)
+                    ? Colors.lightBlueAccent
+                    : null,
                 child: ListTile(
                   leading: const Icon(Icons.store),
                   title: Text(snapshot.data!.title),
@@ -58,7 +74,7 @@ class DrawerStoresView extends StatelessWidget {
           PropertyFilePage(
             editable: true,
             type: 'container',
-            parentFile: wFile,
+            parentFile: widget.wFile,
           ),
         );
       },

@@ -29,6 +29,7 @@ class _ExplorerViewState extends State<ExplorerView> {
     return Scaffold(
       drawer: (widget.withDrawer)
           ? WiiDrawerView(
+              rxSettings: Singleton().rxSettings!,
               rxFile: Singleton().rxRoot!,
               rxProfile: Singleton().rxProfile!,
             )
@@ -37,40 +38,38 @@ class _ExplorerViewState extends State<ExplorerView> {
       floatingActionButton: WiiFab(
         wFile: widget.wFile,
       ),
-      body: Obx(
-        () => CustomScrollView(slivers: [
-          SliverAppBar(
-            title: Text(widget.wFile.value.title), //Text(dirModel.value.title),
-          ),
-          FutureBuilder(
-              future: DBTool.loadAllFilesFromFS(files),
-              builder: (BuildContext context, AsyncSnapshot<List<WFile?>> snapshot) {
-                if (snapshot.hasData) {
-                  return SliverGrid(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      var wFiles = snapshot.data;
-                      print("1-> $index " + wFiles.toString());
-                      var file = wFiles?[index];
-                      print("2->" + file.toString());
-                      return ElementGridView(rxmodel: file!.obs, rxParent: widget.wFile);
-                    }, childCount: snapshot.data!.length),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 3.0,
-                      mainAxisSpacing: 3.0,
-                      childAspectRatio: 1.0, // Verhältnis von Breite zu Höhe
-                    ),
-                  );
-                } else {
-                  return SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.grey,
-                    ),
-                  );
-                }
-              }),
-        ]),
-      ),
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          title: Text(widget.wFile.value.title), //Text(dirModel.value.title),
+        ),
+        FutureBuilder(
+            future: DBTool.loadAllFilesFromFS(files),
+            builder: (BuildContext context, AsyncSnapshot<List<WFile?>> snapshot) {
+              if (snapshot.hasData) {
+                return SliverGrid(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    var wFiles = snapshot.data;
+                    print("1-> $index " + wFiles.toString());
+                    var file = wFiles?[index];
+                    print("2->" + file.toString());
+                    return ElementGridView(rxmodel: file!.obs, rxParent: widget.wFile);
+                  }, childCount: snapshot.data!.length),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 3.0,
+                    mainAxisSpacing: 3.0,
+                    childAspectRatio: 1.0, // Verhältnis von Breite zu Höhe
+                  ),
+                );
+              } else {
+                return SliverToBoxAdapter(
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                );
+              }
+            }),
+      ]),
     );
   }
 }

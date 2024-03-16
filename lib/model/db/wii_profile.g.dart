@@ -23,14 +23,13 @@ class WProfileAdapter extends TypeAdapter<WProfile> {
       email: fields[7] as String,
       description: fields[9] as String,
       image: fields[11] as String,
-      // groups: (fields[13] as List).cast<dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, WProfile obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(1)
       ..write(obj.firstname)
       ..writeByte(3)
@@ -42,9 +41,7 @@ class WProfileAdapter extends TypeAdapter<WProfile> {
       ..writeByte(9)
       ..write(obj.description)
       ..writeByte(11)
-      ..write(obj.image)
-      ..writeByte(13);
-    // ..write(obj.groups);
+      ..write(obj.image);
   }
 
   @override
@@ -53,7 +50,9 @@ class WProfileAdapter extends TypeAdapter<WProfile> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WProfileAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is WProfileAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 // **************************************************************************
@@ -67,7 +66,6 @@ WProfile _$WProfileFromJson(Map<String, dynamic> json) => WProfile(
       email: json['email'] as String,
       description: json['description'] as String,
       image: json['image'] as String,
-      // groups: json['groups'] as List<dynamic>,
     );
 
 Map<String, dynamic> _$WProfileToJson(WProfile instance) => <String, dynamic>{
@@ -77,5 +75,4 @@ Map<String, dynamic> _$WProfileToJson(WProfile instance) => <String, dynamic>{
       'email': instance.email,
       'description': instance.description,
       'image': instance.image,
-      // 'groups': instance.groups,
     };

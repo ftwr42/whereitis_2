@@ -53,7 +53,9 @@ class WFileAdapter extends TypeAdapter<WFile> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WFileAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is WFileAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 // **************************************************************************
@@ -63,12 +65,11 @@ class WFileAdapter extends TypeAdapter<WFile> {
 WFile _$WFileFromJson(Map<String, dynamic> json) => WFile(
       title: json['title'] as String,
       description: json['description'] as String,
-      id: json['id'] as String,
+      id: json['id'] as String? ?? "",
       auth: json['auth'] as String,
       location: json['location'] as String,
       image: json['image'] as String,
-      files: json['files'] as List<
-          dynamic>, //todo get all json strings from db with the id mentioned in this list and add these as seperated wfile file into the list
+      files: json['files'] as List<dynamic>,
     );
 
 Map<String, dynamic> _$WFileToJson(WFile instance) => <String, dynamic>{
@@ -78,6 +79,5 @@ Map<String, dynamic> _$WFileToJson(WFile instance) => <String, dynamic>{
       'auth': instance.auth,
       'location': instance.location,
       'image': instance.image,
-      'files':
-          instance.files, //todo get all id from these and save them to list and put this list here
+      'files': instance.files,
     };

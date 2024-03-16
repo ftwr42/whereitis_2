@@ -1,6 +1,8 @@
 import 'dart:core';
 
 import 'package:get/get.dart';
+import 'package:whereitis_2/handle_stores.dart';
+import 'package:whereitis_2/model/db/settings.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 
 import 'model/db/wii_file.dart';
@@ -13,8 +15,13 @@ class Singleton {
 
   Rx<WFile>? rxRoot;
   Rx<WProfile>? rxProfile;
+  Rx<WSettings>? rxSettings;
+  Rx<WFile>? setActiveStore;
+  Rx<HandleStores>? rxHandleStores;
 
   int _hashCounter = 42;
+
+  RxBool? setCheck;
 
   int getHashCounter() {
     return _hashCounter++;
