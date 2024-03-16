@@ -8,8 +8,14 @@ class ElementPropertyView extends StatefulWidget {
   late Rx<WFile> wFile;
   late Rx<WFile> parentFile;
   late bool editable;
+  bool change = false;
   ElementPropertyView(
-      {required this.wFile, this.editable = false, required this.parentFile, required String type});
+      {required this.wFile,
+      this.editable = false,
+      required this.parentFile,
+      required String type}) {
+    change = editable;
+  }
 
   @override
   State<ElementPropertyView> createState() => _ElementPropertyViewState();
@@ -62,7 +68,10 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
                     model.auth = cAuth.text;
                     model.location = cLocation.text;
                     model.description = cDescription.text;
-                    model.id = cId.text;
+
+                    if (widget.change) {
+                      DBTool.SETID(model);
+                    }
 
                     DBTool.putFile(widget.wFile.value, widget.parentFile);
                   }

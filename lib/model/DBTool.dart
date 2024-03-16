@@ -20,9 +20,9 @@ class DBTool {
 
   static clearAll() async {
     var fileBox = await openHiveBox(FILENAME);
-    fileBox.clear();
+    await fileBox.clear();
     var profileBox = await openHiveBox(PROFILENAME);
-    profileBox.clear();
+    await profileBox.clear();
   }
 
   static putDefaults() async {
@@ -33,76 +33,95 @@ class DBTool {
       auth: "drwxrwxrwx",
       location: "root",
       image: "root",
-      files: ["storeaid", "storebid"],
+      files: [],
     );
-    var storeA = WFile(
+    var storeA = SETID(WFile(
       title: "Store A",
       description: "Stores Chickens",
-      id: "storeaid",
       auth: "drwxrwxrwx",
       location: "chicken land",
       image: AssetsImages.PLACEHOLDER_STORE,
-      files: ["chickenbunid", "chickenwingid"],
-    );
-    var storeABun = WFile(
+      files: [],
+    ));
+    var storeABun = SETID(WFile(
       title: "Chicken Bun",
       description: "holds a box of chicken pieces",
-      id: "chickenbunid",
       auth: "drwxrwxrwx",
       location: "in chicken store",
       image: AssetsImages.PLACEHOLDER_CONTAINER,
-      files: ["chickenpiecesid"],
-    );
-    var storeAChickenWing = WFile(
+      files: [],
+    ));
+    var storeAChickenWing = SETID(WFile(
       title: "Chicken Wing",
       description: "crusty and jammy",
-      id: "chickenwingid",
       auth: "irwxrwxrwx",
       location: "in chicken store",
       image: AssetsImages.PLACEHOLDER_ITEM,
       files: [],
-    );
-    var storeAPiece = WFile(
-      title: "Chicken Pieces",
+    ));
+    var storeAPiece2 = SETID(WFile(
+      title: "Chicken Piece small",
+      description: "crusty and jammy",
+      auth: "irwxrwxrwx",
+      location: "in chicken store",
+      image: AssetsImages.PLACEHOLDER_ITEM,
+      files: [],
+    ));
+    var storeAPiece = SETID(WFile(
+      title: "Chicken Pieces big",
       description: "pieces of chicken",
-      id: "chickenpiecesid",
       auth: "irwxrwxrwx",
       location: "in a bun",
       image: AssetsImages.PLACEHOLDER_ITEM,
       files: [],
-    );
+    ));
 
-    var storeB = WFile(
+    var storeB = SETID(WFile(
       title: "Store B",
       description: "Stores Dogs",
-      id: "storebid",
       auth: "drwxrwxrwx",
       location: "dogs land",
       image: AssetsImages.PLACEHOLDER_STORE,
-      files: ["cutedogid"],
-    );
-    var storeBdog = WFile(
+      files: [],
+    ));
+    var storeBdog = SETID(WFile(
       title: "cute Dog",
       description: "A cute little dog",
-      id: "cutedogid",
       auth: "irwxrwxrwx",
       location: "in the dog shop",
       image: AssetsImages.PLACEHOLDER_ITEM,
       files: [],
-    );
+    ));
 
     var fileBox = await openHiveBox(FILENAME);
-    fileBox.put("root", rootFile.toJson());
+    var json = rootFile.toJson();
+    var jsonEncode2 = jsonEncode(json);
+    var string = jsonEncode2.toString();
+
+    await fileBox.put("root", string);
     Rx<WFile> rxRoot = rootFile.obs;
     Singleton().rxRoot = rxRoot;
 
-    putFile(storeA, rxRoot);
-    putFile(storeABun, rxRoot);
-    putFile(storeAPiece, storeABun.obs);
-    putFile(storeAChickenWing, rxRoot);
+    var s = await fileBox.get("root");
+    var loadFileFromFS3 = await loadFileFromFS('root');
+
+    await putFile(storeA, rxRoot);
+
+    Rx<WFile> storA = storeA.obs;
+
+    var fileBox2 = await openHiveBox(FILENAME);
+
+    // var loadFileFromFS2 = await loadFileFromFS(storeA.id);
+    var ls = await fileBox2.get(storeA.id);
+
+    await putFile(storeABun, storA);
+    await putFile(storeAPiece, storeABun.obs);
+    await putFile(storeAPiece2, storeABun.obs);
+    await putFile(storeAChickenWing, storA);
 
     Rx<WFile> rxStoreB = storeB.obs;
-    putFile(storeBdog, rxStoreB);
+    await putFile(storeB, rxRoot);
+    await putFile(storeBdog, rxStoreB);
 
     var wProfile = WProfile(
       firstname: "Jan",
@@ -113,14 +132,17 @@ class DBTool {
       image: AssetsImages.PLACEHOLDER_PROFILE,
     );
 
+    var wp = wProfile.toJson();
+    var wpjsonEncode2 = jsonEncode(wp);
+    var wpstring = wpjsonEncode2.toString();
     Singleton().rxProfile = wProfile.obs;
-    await putProfile(wProfile);
+    var name = await (await openHiveBox(PROFILENAME)).put('root', wpstring);
   }
 
   static putProfile(WProfile wProfile) async {
     var filesBox = await openHiveBox(PROFILENAME);
     var json = wProfile.toJson();
-    filesBox.put('root', json);
+    filesBox.put('root', json.toString());
   }
 
   static Future<void> printAllFiles() async {
@@ -131,87 +153,72 @@ class DBTool {
 
     int i = 0;
     for (String key in fileBox.keys) {
-      var wFile = await loadFileFromFS(key);
-      print("\t${++i < 9 ? " " : ""}$i. ${wFile?.toJson()}");
+      WFile? wFile = await loadFileFromFS(key);
+      if (wFile != null) {
+        print("\t${++i < 9 ? " " : ""}$i. ${wFile.toJson()}");
+      }
     }
   }
 
-  static Future<dynamic> loadProfileFromFs() async {
+  static Future<WProfile> loadProfileFromFs(String key) async {
     var profilesBox = await openHiveBox(PROFILENAME);
 
-    var getProfile = await _getProfile(profilesBox, 'root');
+    var profile = await profilesBox.get(key);
+    var decode = jsonDecode(profile.toString());
+    var jsonDecode2 = decode;
+    var wProfile = WProfile.fromJson(decode);
 
-    return getProfile;
-  }
-
-  static Future<Rx<WFile>> loadProfileAndRootSafeToSingletonAndReturnRoot() async {
-    var profile = await loadProfileFromFs();
-    Singleton().rxProfile = profile.obs;
-
-    var rootFile = await loadFileFromFS('root');
-    Rx<WFile> rxRoot;
-    if (rootFile == null) {
-      rootFile = WFile(
-          title: "root",
-          description: "root",
-          id: "root",
-          auth: "drwxrwxrwx",
-          location: "root",
-          image: "root",
-          files: []);
-      WFile storeFile = SETID(WFile(
-          title: "Store",
-          description: "default store",
-          auth: "drwxrwxrwx",
-          location: "store location",
-          image: AssetsImages.PLACEHOLDER_STORE,
-          files: []));
-
-      var fileBox = await openHiveBox(FILENAME);
-      fileBox.put("root", rootFile.toJson());
-      rxRoot = rootFile.obs;
-      putFile(storeFile, rxRoot);
-    } else {
-      rxRoot = rootFile.obs;
-    }
-
-    Singleton().rxRoot = rxRoot;
-
-    return rxRoot;
+    return wProfile;
   }
 
   static Future<WFile?> loadFileFromFS(String key) async {
     var fileBox = await openHiveBox(FILENAME);
 
     var root = await fileBox.get(key);
+    //print(root);
 
     if (root == null) {
       return null;
     }
 
-    var wFile = WFile.fromJson(root);
+    var jsonDecode2 = jsonDecode(root);
+    var wFile = WFile.fromJson(jsonDecode2);
+
     return wFile;
   }
 
   static putFile(WFile wFile, Rx<WFile> parent) async {
     var openBox = await openHiveBox(FILENAME);
 
-    var getFile = await loadFileFromFS(wFile.id);
+    // var getFile = await loadFileFromFS(wFile.id);
+    var getFile = await openBox.get(wFile.id);
 
     var json = wFile.toJson();
-    openBox.put(wFile.id, jsonDecode(json.toString()));
+    var jsonEncode2 = jsonEncode(json);
+    var string = jsonEncode2.toString();
+
+    await openBox.put(wFile.id, string);
+    var s = await openBox.get(wFile.id);
+    // print(s);
 
     if (getFile == null) {
-      _addToLists(wFile, parent);
+      await _addToLists(openBox, wFile, parent);
     }
   }
 
-  static _addToLists(WFile wFile, Rx<WFile> parent) {
+  static _addToLists(Box<dynamic> box, WFile wFile, Rx<WFile> parent) async {
     parent.value.files.add(wFile.id);
+
+    var json = parent.value.toJson();
+    var jsonEncode2 = jsonEncode(json);
+    var string = jsonEncode2.toString();
+
+    await (await openHiveBox(FILENAME)).put(parent.value.id, string);
+    // var s = (await openHiveBox(FILENAME)).get(parent.value.id);
     parent.refresh();
   }
 
-  static Future<WProfile?> _getProfile(Box<dynamic> box, String key) async {
+  static Future<WProfile?> getProfile(Box<dynamic> box, String key) async {
     var string = await box.get(key);
 
     if (string == null) {
@@ -223,11 +230,11 @@ class DBTool {
     return wProfile;
   }
 
-  static Future<Box> openHiveBox(String boxName) async {
-    if (!kIsWeb && !Hive.isBoxOpen(boxName))
+  static Future<Box<String?>> openHiveBox(String boxName) async {
+    if (!kIsWeb && !Hive.isBoxOpen(boxName)) {
       Hive.init((await getApplicationDocumentsDirectory()).path);
-
-    return await Hive.openBox(boxName);
+    }
+    return Hive.openBox<String>(boxName);
   }
 
   static WFile SETID(WFile wFile) {
@@ -236,5 +243,15 @@ class DBTool {
     var convert = sha1.convert(encode);
     wFile.id = convert.toString();
     return wFile;
+  }
+
+  static Future<List<WFile>> loadAllFilesFromFS(List<dynamic> files) async {
+    List<WFile> wFiles = [];
+    for (String str in files) {
+      var wFile = await loadFileFromFS(str);
+      wFiles.add(wFile!);
+    }
+
+    return wFiles;
   }
 }

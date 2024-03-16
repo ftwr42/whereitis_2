@@ -23,6 +23,7 @@ class ElementGridView extends StatelessWidget {
             ));
           } else {
             Get.to(() => PropertyFilePage(
+                  editable: false,
                   type: 'container',
                   parentFile: rxParent,
                   wFile: rxmodel,
@@ -31,6 +32,7 @@ class ElementGridView extends StatelessWidget {
         },
         onLongPress: () {
           Get.to(() => PropertyFilePage(
+                editable: false,
                 type: 'container',
                 parentFile: rxParent,
                 wFile: rxmodel,

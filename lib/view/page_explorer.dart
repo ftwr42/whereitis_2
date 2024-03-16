@@ -6,6 +6,7 @@ import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/singleton.dart';
 import 'package:whereitis_2/view/specials/drawer/view_drawer.dart';
 import 'package:whereitis_2/view/specials/fab/view_fab.dart';
+import 'package:whereitis_2/view/view_element_grid.dart';
 
 class ExplorerView extends StatefulWidget {
   late Rx<WFile> wFile;
@@ -26,45 +27,76 @@ class _ExplorerViewState extends State<ExplorerView> {
     });
 
     return Scaffold(
-      floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: WiiFab(
-        wFile: widget.wFile,
-      ),
-      drawer: (Singleton().rxRoot == null || Singleton().rxProfile == null)
+      drawer: (widget.withDrawer)
           ? WiiDrawerView(
               rxFile: Singleton().rxRoot!,
               rxProfile: Singleton().rxProfile!,
             )
           : null,
-      body: CustomScrollView(
-        slivers: [
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: WiiFab(
+        wFile: widget.wFile,
+      ),
+      body: Obx(
+        () => CustomScrollView(slivers: [
           SliverAppBar(
             title: Text(widget.wFile.value.title), //Text(dirModel.value.title),
           ),
-          SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-                (context, index) => FutureBuilder(
-                    future: DBTool.loadFileFromFS(files[index]),
-                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      Widget w = const Text("HAS NO DATA");
-                      if (snapshot.hasData) {
-                        w = ExplorerView(wFile: snapshot.data);
-                      }
-                      return w;
-                    }),
-                childCount: files.length),
-            gridDelegate: elementGridDelegate(2),
-          ),
-        ],
+          FutureBuilder(
+              future: DBTool.loadAllFilesFromFS(files),
+              builder: (BuildContext context, AsyncSnapshot<List<WFile?>> snapshot) {
+                if (snapshot.hasData) {
+                  return SliverGrid(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      var wFiles = snapshot.data;
+                      print("1-> $index " + wFiles.toString());
+                      var file = wFiles?[index];
+                      print("2->" + file.toString());
+                      return ElementGridView(rxmodel: file!.obs, rxParent: widget.wFile);
+                    }, childCount: snapshot.data!.length),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 3.0,
+                      mainAxisSpacing: 3.0,
+                      childAspectRatio: 1.0, // Verhältnis von Breite zu Höhe
+                    ),
+                  );
+                } else {
+                  return SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.grey,
+                    ),
+                  );
+                }
+              }),
+        ]),
       ),
     );
   }
-
-  SliverGridDelegateWithFixedCrossAxisCount elementGridDelegate(int crossAxisCount) =>
-      SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: 3.0,
-        mainAxisSpacing: 3.0,
-        childAspectRatio: 1.0, // Verhältnis von Breite zu Höhe
-      );
 }
+
+// return CustomScrollView(
+// slivers: [
+// SliverAppBar(
+// title: Text(widget.wFile.value.title), //Text(dirModel.value.title),
+// ),
+// SliverGrid(
+// delegate: SliverChildBuilderDelegate(
+// (context, index) => FutureBuilder(
+// future: DBTool.loadFileFromFS(files[index]),
+// builder: (BuildContext context, AsyncSnapshot<WFile?> snapshot) {
+// if (snapshot.hasData) {
+// var data = snapshot.data;
+// var obs = data!.obs;
+// return ElementGridView(
+// rxmodel: obs,
+// rxParent: widget.wFile,
+// );
+// }
+// return Container();
+// }),
+// childCount: files.length),
+// gridDelegate: elementGridDelegate(2),
+// ),
+// ],
+// );

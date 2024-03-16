@@ -10,11 +10,13 @@ class PropertyFilePage extends StatelessWidget {
   late Rx<WFile>? wFile;
   late Rx<WFile> parentFile;
   late Rx<WProfile>? rxProfile;
+  late bool editable;
   PropertyFilePage({
     super.key,
     required this.type,
     required this.parentFile,
     this.wFile,
+    required this.editable,
   });
 
   @override
@@ -22,7 +24,6 @@ class PropertyFilePage extends StatelessWidget {
     WFile newFile = WFile(
         title: "title",
         description: "description",
-        id: "",
         auth: "auth",
         location: "location",
         image: "",
@@ -44,6 +45,7 @@ class PropertyFilePage extends StatelessWidget {
         wFile: (wFile == null) ? newFile.obs : wFile!,
         type: type.toLowerCase(),
         parentFile: parentFile,
+        editable: editable,
       ),
     );
   }

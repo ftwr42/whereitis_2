@@ -25,6 +25,7 @@ class WiiFab extends StatelessWidget {
             _key.currentState!.toggle();
             Get.to(
               PropertyFilePage(
+                editable: true,
                 type: "item",
                 parentFile: wFile,
               ),
@@ -38,6 +39,7 @@ class WiiFab extends StatelessWidget {
             _key.currentState!.toggle();
             Get.to(
               PropertyFilePage(
+                editable: true,
                 type: "container",
                 parentFile: wFile,
               ),

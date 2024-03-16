@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 import 'package:whereitis_2/project/textstyle.dart';
-import 'package:whereitis_2/singleton.dart';
 import 'package:whereitis_2/view/pages/page_property_profile.dart';
 
 class DrawerProfileView extends StatelessWidget {
@@ -16,6 +12,7 @@ class DrawerProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var value = rxProfile.value;
     return GestureDetector(
       onLongPress: () {
         Get.to(PropertyProfilePage(
@@ -27,29 +24,14 @@ class DrawerProfileView extends StatelessWidget {
         child: Stack(
           children: [
             Align(alignment: Alignment.center, child: profileImage()),
-            Align(alignment: Alignment.bottomRight, child: credentials()),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: credentialsShow(value.email, value.firstname, value.lastname)),
           ],
         ),
       ),
     );
   }
-
-  Widget credentials() => FutureBuilder(
-        future: DBTool.loadProfileFromFs(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          Widget w;
-          if (snapshot.hasData) {
-            String data = snapshot.data;
-            var profile = WProfile.fromJson(jsonDecode(data)).obs;
-            Singleton().rxProfile = profile;
-            w = credentialsShow(
-                profile.value.email, profile.value.firstname, profile.value.lastname);
-          } else {
-            w = credentialsShow("ur mail", "ur name", "ur lastname");
-          }
-          return w;
-        },
-      );
 
   Widget credentialsShow(String email, String firstname, String lastname) => Container(
         height: height,

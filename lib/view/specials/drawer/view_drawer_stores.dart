@@ -56,6 +56,7 @@ class DrawerStoresView extends StatelessWidget {
       onTap: () {
         Get.to(
           PropertyFilePage(
+            editable: true,
             type: 'container',
             parentFile: wFile,
           ),
