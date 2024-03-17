@@ -56,7 +56,19 @@ class MyApp extends StatelessWidget {
           future: rxHandleStores.value.getActiveStore(),
           builder: (BuildContext context, AsyncSnapshot<WFile?> snapshot) {
             if (snapshot.hasData) {
-              return ExplorerView(wFile: snapshot.data!.obs);
+              var data = snapshot.data;
+              var obs = data!.obs;
+              return ExplorerView(wFile: obs);
+            } else {
+              return Container(
+                color: Colors.blueAccent,
+                child: Column(
+                  children: [
+                    const Text("Root"),
+                    // Text(Singleton().rxRoot!.value.title)
+                  ],
+                ),
+              );
             }
             return Container();
           },

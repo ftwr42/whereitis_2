@@ -48,6 +48,7 @@ class _DrawerStoresViewState extends State<DrawerStoresView> {
 
                 var rxHandleStore = Singleton().rxHandleStores;
                 rxHandleStore?.value.activeStore = key;
+                // DBTool.putSettings(WSettings(activeStore: key));
                 rxHandleStore?.refresh();
               },
               child: Container(

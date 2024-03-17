@@ -157,14 +157,32 @@ class DBTool {
   static Future<void> printAllFiles() async {
     var fileBox = await openHiveBox(FILENAME);
     var profileBox = await openHiveBox(PROFILENAME);
+    var settingsBox = await openHiveBox(SETTINGSNAME);
 
     print("PRINT_ALL_FILES keys=${fileBox.keys}");
-
     int i = 0;
     for (String key in fileBox.keys) {
       WFile? wFile = await loadFileFromFS(key);
       if (wFile != null) {
         print("\t${++i < 9 ? " " : ""}$i. ${wFile.toJson()}");
+      }
+    }
+
+    print("PRINT_ALL_SETTINGS keys=${settingsBox.keys}");
+    int j = 0;
+    for (String key in settingsBox.keys) {
+      WSettings? wFile = await loadSettingsFromFS(key);
+      if (WSettings != null) {
+        print("\t${++j < 9 ? " " : ""}$j. ${wFile?.toJson()}");
+      }
+    }
+
+    print("PRINT_ALL_PROFILES keys=${profileBox.keys}");
+    int k = 0;
+    for (String key in profileBox.keys) {
+      WProfile? wProfile = await loadProfileFromFs(key);
+      if (wProfile != null) {
+        print("\t${++k < 9 ? " " : ""}$k. ${wProfile.toJson()}");
       }
     }
   }
@@ -180,18 +198,31 @@ class DBTool {
     return wProfile;
   }
 
-  static Future<WSettings?> loadSettingsFromFS(String key) async {
+  static Future<WSettings> loadSettingsFromFS(String key) async {
     var openBox = await openHiveBox(SETTINGSNAME);
     var settings = await openBox.get('root');
 
     if (settings == null) {
-      return null;
+      var wSettings = WSettings(activeStore: "");
+      putSettings(wSettings);
+      return wSettings;
     }
 
     var decode = jsonDecode(settings);
     WSettings wSettings = WSettings.fromJson(decode);
 
     return wSettings;
+  }
+
+  static Future<String> loadStringFromFS(String key) async {
+    var fileBox = await openHiveBox(FILENAME);
+
+    var root = await fileBox.get(key);
+
+    if (root == null) {
+      return "empty";
+    }
+    return root;
   }
 
   static Future<WFile?> loadFileFromFS(String key) async {
@@ -201,7 +232,39 @@ class DBTool {
     //print(root);
 
     if (root == null) {
-      return null;
+      var root = WFile(
+          title: "root",
+          description: "root",
+          auth: "root",
+          location: "root",
+          image: "root",
+          files: []);
+
+      var rxRoot = root.obs;
+
+      await (await openHiveBox(FILENAME)).put("root", jsonEncode(root.toJson()).toString());
+
+      var store = SETID(WFile(
+          title: "Store A",
+          description: "default Store",
+          auth: "drwxrwxrwx",
+          location: "nowhere",
+          image: AssetsImages.PLACEHOLDER_STORE,
+          files: []));
+
+      await putFile(store, rxRoot);
+
+      var item = SETID(WFile(
+          title: "Item",
+          description: "default item",
+          auth: "irwxrwxrwx",
+          location: "nowhere",
+          image: AssetsImages.PLACEHOLDER_ITEM,
+          files: []));
+
+      await putFile(item, rxRoot);
+
+      return root;
     }
 
     var jsonDecode2 = jsonDecode(root);
