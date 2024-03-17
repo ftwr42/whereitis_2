@@ -16,6 +16,10 @@ dependencies:
   hive: ^2.2.3
   hive_flutter:
   path_provider: ^2.1.2
+  image_picker: ^1.0.7
+  camera: ^0.10.5+9
+  path: ^1.8.3
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:

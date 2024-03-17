@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:camera/camera.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -375,5 +376,32 @@ class DBTool {
     }
 
     return wFiles;
+  }
+
+  static Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory(); // aus dem Path Provider Package
+    if (!(await directory.exists())) {
+      directory.create();
+    }
+    return directory.path;
+  }
+
+  static Future<void> putImageToFS({required XFile file}) async {
+    final path = await _localPath;
+
+    await file.saveTo(path + file.name);
+
+    // file.writeAsString(mode: FileMode.write, encoding: utf8, flush: false);
+
+    // final File file = (await _localFile(name: 'data.json'));
+  }
+
+  static Future<XFile> loadImageFromFS({required String imageName}) async {
+    final directory = await _localPath;
+    String path = "${directory}/${imageName}";
+    var split = path.split("/");
+    var xFile = XFile(path + "/$imageName");
+
+    return xFile;
   }
 }

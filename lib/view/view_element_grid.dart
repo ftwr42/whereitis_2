@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/project/textstyle.dart';
 import 'package:whereitis_2/view/page_explorer.dart';
@@ -39,40 +42,54 @@ class ElementGridView extends StatelessWidget {
               ));
         },
         child: Obx(
-          () => Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset("assets/images/cubboard_default_1.jpg"),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: Colors.black.withOpacity(0.75), // Semi-transparent background
-                  padding: EdgeInsets.all(10),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          rxmodel.value.title,
-                          style: ProjectTextStyle.title(),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          rxmodel.value.description,
-                          style: ProjectTextStyle.description(),
-                        ),
-                      ],
+          () {
+            return Stack(
+              children: [
+                FutureBuilder(
+                  future: DBTool.loadImageFromFS(imageName: rxmodel.value.image),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Image.file(snapshot.data as File),
+                      );
+                    } else {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Image.asset("assets/images/cubboard_default_1.jpg"),
+                      );
+                    }
+                  },
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.75), // Semi-transparent background
+                    padding: EdgeInsets.all(10),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            rxmodel.value.title,
+                            style: ProjectTextStyle.title(),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            rxmodel.value.description,
+                            style: ProjectTextStyle.description(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          },
         ),
       ),
     );

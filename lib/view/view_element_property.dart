@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_file.dart';
 import 'package:whereitis_2/project/textfield.dart';
+import 'package:whereitis_2/tools/camera/tool_camera.dart';
 
 class ElementPropertyView extends StatefulWidget {
   late Rx<WFile> wFile;
@@ -30,17 +31,26 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
 
   @override
   Widget build(BuildContext context) {
+    // widget.wFile.listen((p0) {
+    //   setState(() {});
+    // });
+    // widget.wFile.update((val) {
+    //   setState(() {});
+    // });
+
     var cDescription = TextEditingController();
     var cLocation = TextEditingController();
     var cId = TextEditingController();
     var cAuth = TextEditingController();
     var cTitle = TextEditingController();
+    var cImage = TextEditingController();
 
     cTitle.text = widget.wFile.value.title;
     cDescription.text = widget.wFile.value.description;
     cLocation.text = widget.wFile.value.location;
     cId.text = widget.wFile.value.id;
     cAuth.text = widget.wFile.value.auth.toString();
+    cImage.text = widget.wFile.value.image.toString();
 
     return SingleChildScrollView(
       child: Container(
@@ -48,6 +58,19 @@ class _ElementPropertyViewState extends State<ElementPropertyView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Container(
+                color: Colors.cyan,
+                child: CameraStreamWidget(
+                  wFile: widget.wFile,
+                ),
+              ),
+            ),
+            Obx(() => ProjectTextFieldWidget.inputField1('Image',
+                TextEditingController()..text = (widget.wFile.value.image), widget.editable)),
+            SizedBox(height: 16.0),
             ProjectTextFieldWidget.inputField1('Title', cTitle, widget.editable),
             SizedBox(height: 16.0),
             ProjectTextFieldWidget.inputField1('Description', cDescription, widget.editable),
