@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whereitis_2/model/DBTool.dart';
@@ -51,7 +49,7 @@ class ElementGridView extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Align(
                         alignment: Alignment.center,
-                        child: Image.file(snapshot.data as File),
+                        child: Image.file(snapshot.data!),
                       );
                     } else {
                       return Align(

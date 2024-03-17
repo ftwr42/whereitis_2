@@ -11,7 +11,7 @@ import 'package:whereitis_2/view/page_explorer.dart';
 Future<void> main() async {
   Get.put(ExplorerController());
   Singleton();
-  //DBTool.clearAll();
+  // DBTool.clearAll();
   //DBTool.putDefaults();
   DBTool.printAllFiles();
 

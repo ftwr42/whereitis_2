@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whereitis_2/model/DBTool.dart';
 import 'package:whereitis_2/model/db/wii_profile.dart';
 import 'package:whereitis_2/project/textstyle.dart';
 import 'package:whereitis_2/view/pages/page_property_profile.dart';
@@ -54,16 +55,29 @@ class DrawerProfileView extends StatelessWidget {
         ),
       );
 
-  Widget profileImage() => const Column(
+  Widget profileImage() => Column(
         children: [
-          CircleAvatar(
-            child: Image(
-              image: AssetImage(
-                "assets/images/profile_placeholder.png",
-              ),
-            ),
-            radius: 200 / 2,
-          ),
+          Obx(
+            () => FutureBuilder(
+                future: DBTool.loadImageFromFS(imageName: rxProfile.value.image),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return CircleAvatar(
+                      radius: 200 / 2,
+                      child: Image.file(snapshot.data!),
+                    );
+                  } else {
+                    return const CircleAvatar(
+                      radius: 200 / 2,
+                      child: Image(
+                        image: AssetImage(
+                          "assets/images/profile_placeholder.png",
+                        ),
+                      ),
+                    );
+                  }
+                }),
+          )
         ],
       );
 }

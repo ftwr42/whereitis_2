@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:crypto/crypto.dart';
@@ -30,6 +31,11 @@ class DBTool {
     await profileBox.clear();
     var settingsBox = await openHiveBox(SETTINGSNAME);
     await settingsBox.clear();
+
+    (await _localPath).listSync().forEach((element) {
+      print("ALL IMAGES after put: " + element.path);
+      element.delete();
+    });
   }
 
   static putDefaults() async {
@@ -378,30 +384,39 @@ class DBTool {
     return wFiles;
   }
 
-  static Future<String> get _localPath async {
+  static Future<Directory> get _localPath async {
     final directory = await getApplicationDocumentsDirectory(); // aus dem Path Provider Package
+    // await directory.rename("${directory.path}/images/");
     if (!(await directory.exists())) {
       directory.create();
     }
-    return directory.path;
+
+    return directory;
   }
 
   static Future<void> putImageToFS({required XFile file}) async {
-    final path = await _localPath;
+    final directory = await _localPath;
 
-    await file.saveTo(path + file.name);
+    var path2 = directory.path + "/" + file.name;
+    await file.saveTo(path2);
+
+    directory.listSync().forEach((element) {
+      print("ALL IMAGES after put: " + element.path);
+    });
 
     // file.writeAsString(mode: FileMode.write, encoding: utf8, flush: false);
 
     // final File file = (await _localFile(name: 'data.json'));
   }
 
-  static Future<XFile> loadImageFromFS({required String imageName}) async {
+  static Future<File?> loadImageFromFS({required String imageName}) async {
     final directory = await _localPath;
-    String path = "${directory}/${imageName}";
-    var split = path.split("/");
-    var xFile = XFile(path + "/$imageName");
+    String path = "${directory.path}/${imageName}";
 
-    return xFile;
+    var file = File(path);
+    if (!(await file.exists())) {
+      return null;
+    }
+    return file;
   }
 }
